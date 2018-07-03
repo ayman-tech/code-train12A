@@ -3,10 +3,60 @@
 #include<stdio.h>
 #include<windows.h>
 #include<stdlib.h>
+//#include<windows.h>
+#include<fstream>
+#include<string.h>
 
-class train
+char* database(char name)
+{
+    clrscr();
+    //using namespace std;
+    //system("color 74");
+    char str1[50][10];
+    char str[60], str2[50];
+    ifstream file(name, ios::in );
+    int i, x, j=0, c=0;
+    cout<<"opened dat \n";
+    while(!file.eof())
+    {
+        strcpy(str," ");
+        strcpy(str2,"                    ");
+        file.getline(str,60);
+        //puts(str);cout<<endl<<endl;
+        for( x=0,i=0; i<=strlen(str); i++ )
+        {
+            if((str[i]==' ' ) || (str[i]=='\0'))
+            {
+                strcpy( str1[c], str2);
+                //puts(str1[c]);
+                strcpy(str2, "             ");
+                c++;
+                x = 0;
+            }
+            else if((str[i]!=' ' ) && (str[i]!='\0'))
+            {
+                cout<<".";
+                str2[ x ] = str[i];
+                x++;
+            }
+        }
+    }
+    file.close();
+    cin.ignore();
+    for(i = 0; i<= c; i++)
+    {
+        //cout<<endl<<endl<<str1[i];
+        cout.write(str1[i], 10);
+        cout<<endl;
+    }
+    cout<<"Bye";
+    cin.ignore();
+}
+
+class Train
 {
    int tno;
+   
    
    
    
