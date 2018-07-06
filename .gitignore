@@ -6,6 +6,7 @@
 //#include<windows.h>
 #include<fstream>
 #include<string.h>
+#include<time.h>
 
 struct date
 {
@@ -19,6 +20,17 @@ struct time
     short int hr;
     short int min;
 };
+
+class Account
+{
+    private :
+        char password[30];
+    protected :
+        char pname[20], email[40];
+        int age;
+    public :
+        
+}
 
 class Train
 {
@@ -38,7 +50,17 @@ class Train
                 
         }
 };
-class Passenger : public Train
+class Passenger : public Train, public Account
 {
-    
+    private :
+        char pname[20],
+        int age, ticketno = ( rand()%8999 + 1000 );
+     public :
+        
+        
+};
+
+int main()
+{
+    srand(time(0));
     
