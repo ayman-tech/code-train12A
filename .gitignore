@@ -26,8 +26,7 @@ class Account
     private :
         char password[30];
     protected :
-        char pname[20], email[40];
-        int age;
+        char username[20], email[40];
     public :
         
 }
@@ -41,11 +40,11 @@ class Train
         time deptime, arrtime, tottime;
         float dist, price;
     public :
-        void inputdata()
+        void inputdata()             //########################
         {
              
         }
-        void outputdata()
+        void outputdata()           //########################
         {
                 
         }
@@ -54,13 +53,48 @@ class Passenger : public Train, public Account
 {
     private :
         char pname[20],
-        int age, ticketno = ( rand()%8999 + 1000 );
-     public :
-        
-        
+        int age, tickno = ( rand()%8999 + 1000 );
+    public :
+         void getdata()                                               //#######################
+         {
+            
+         }
+         void putdata()                                                //##################
+         {
+            
+         }
+         void search_ticket()
+         {
+            int x, flag = 0;
+            Passenger pss;
+            cout<<"Enter Ticket number : ";
+            cin>>x;
+            ifstream file("passenger.dat, ios::in");
+            while( !file.eof )
+            {
+                file.read((char *) &pss, sizeof(pss));
+                if(x==pss.tickno)
+                {
+                    pss.putdata();
+                    flag = 1;
+                    break;
+                }
+            }
+            if(flag == 0)
+                cout<<"No such passenger found";
+            file.close();
+         }
+         void search_train()
+         {
+            iftstream file("train.dat", ios::in);                       //####################
+         }
+         void print_ticketinfo()
+         {
+            ifstream file()
 };
 
 int main()
 {
+    system("color 74");
     srand(time(0));
     
