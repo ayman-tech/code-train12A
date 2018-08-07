@@ -40,11 +40,11 @@ class Train
         time deptime, arrtime, tottime;
         float dist, price;
     public :
-        void inputdata()             //########################
+        void get_details()             //########################
         {
              
         }
-        void outputdata()           //########################
+        void print_details()           //########################
         {
                 
         }
@@ -57,7 +57,7 @@ class Passenger : public Train, public Account
     public :
          void getdata()                                               //#######################
          {
-            
+              
          }
          void putdata()                                                //##################
          {
@@ -84,13 +84,28 @@ class Passenger : public Train, public Account
                 cout<<"No such passenger found";
             file.close();
          }
-         void search_train()
+         void search_train(long int tno)
          {
-            iftstream file("train.dat", ios::in);                       //####################
+            Train obj;
+            int flag = 0;
+            iftstream file("train.dat", ios::in);
+            while(!file.eof())
+            {
+                file.read((char*)&obj,sizeof(obj));
+                if tno==obj.tno
+                    flag = 1;
+                    break;
+            }    
+            if( flag==1 ) 
+            {      
+                cout<<"Search Successful ";
+                obj.print_details();
+            }
+            else
+                cout<<"No Such Train Found ";   
          }
-         void print_ticketinfo()
-         {
-            ifstream file()
+         
+         
 };
 
 int main()
