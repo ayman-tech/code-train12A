@@ -52,8 +52,9 @@ class Train
 class Passenger : public Train, public Account
 {
     private :
-        char pname[20],
+        char pname[20], email[30], gender[7], depcity[20], arrcity[20]; 
         int age, tickno = ( rand()%8999 + 1000 );
+        long int mobno, trno;
     public :
          void getdata()                                               //#######################
          {
@@ -61,19 +62,20 @@ class Passenger : public Train, public Account
          }
          void putdata()                                                //##################
          {
+            cout<<"Passenger Name : ";
+            puts(pname);
+            cout<<
             
          }
-         void search_ticket()
+         void search_ticket(int ticket_no)
          {
-            int x, flag = 0;
+            int flag = 0;
             Passenger pss;
-            cout<<"Enter Ticket number : ";
-            cin>>x;
             ifstream file("passenger.dat, ios::in");
             while( !file.eof )
             {
                 file.read((char *) &pss, sizeof(pss));
-                if(x==pss.tickno)
+                if( ticket_no==pss.tickno )
                 {
                     pss.putdata();
                     flag = 1;
@@ -84,15 +86,15 @@ class Passenger : public Train, public Account
                 cout<<"No such passenger found";
             file.close();
          }
-         void search_train(long int tno)
+         void search_train( long int train_no )
          {
             Train obj;
             int flag = 0;
-            iftstream file("train.dat", ios::in);
-            while(!file.eof())
+            iftstream file( "train.dat", ios::in );
+            while( !file.eof() )
             {
                 file.read((char*)&obj,sizeof(obj));
-                if tno==obj.tno
+                if( train_no==obj.tno )
                     flag = 1;
                     break;
             }    
@@ -103,7 +105,9 @@ class Passenger : public Train, public Account
             }
             else
                 cout<<"No Such Train Found ";   
+            file.close();
          }
+         void 
          
          
 };
