@@ -62,9 +62,10 @@ class Passenger : public Train, public Account
          }
          void putdata()                                                //##################
          {
+            cout<<"Ticket no"
             cout<<"Passenger Name : ";
             puts(pname);
-            cout<<
+            cout<<""
             
          }
          void search_ticket(int ticket_no)
@@ -85,8 +86,9 @@ class Passenger : public Train, public Account
             if(flag == 0)
                 cout<<"No such passenger found";
             file.close();
-         }
-         void search_train( long int train_no )
+        }
+        //For non admin
+        void search_train( long int train_no )
          {
             Train obj;
             int flag = 0;
@@ -107,9 +109,46 @@ class Passenger : public Train, public Account
                 cout<<"No Such Train Found ";   
             file.close();
          }
-         void 
-         
-         
+         void search_train( char dep[], char arr[] )
+         {
+            Train obj;
+            int flag = 0;
+            iftstream file( "train.dat", ios:in);
+            while( !file.eof() )
+            {
+                file.read((char*)&obj,sizeof(obj));
+                if((strcmp(arr, obj.arrcity)==0)&&(strcmp(dep, obj.depcity)==0))
+                    flag = 1;
+                    cout<<"Search Successful ";
+                    obj.print_details();
+                    break;
+            }    
+            if( flag==0)             
+                cout<<"No Such Train Found ";   
+            file.close();
+         }
+        void display_train()   //for admin and pass
+        {
+            Train obj;
+            ifstream file( "train.dat", ios::in )
+            while( !file.eof() )
+            {
+                file.read( (char*)&obj, sizeof(obj) );
+                obj.print_details();
+            }
+            file.close();
+        }
+        
+        void add_train()  //for admin
+        {
+            Train obj;
+            ofstream file( "train.dat", ios::binary | ios::app );
+            cout<<"Enter The following info to add train schedule ";
+            obj.get_details();
+            file.write((char*)&obj, sizeof(obj));
+            file.close();
+        }
+        void 
 };
 
 int main()
