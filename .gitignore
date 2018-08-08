@@ -148,7 +148,23 @@ class Passenger : public Train, public Account
             file.write((char*)&obj, sizeof(obj));
             file.close();
         }
-        void 
+        void update_train()
+        {
+            long int train_no;
+            cout<<"Enter Train Number of The Train to be updated : ";
+            cin>>train_no;
+            Train obj;
+            ifstream file("train.dat", ios::binary )
+            while( !file.eof )
+            {
+                file.read( (char*)&obj, sizeof(obj) );
+                if( train_no==obj.tno )
+                {
+                    long pos = file.tellg();
+                    
+                }
+            }
+        }
 };
 
 int main()
