@@ -161,10 +161,70 @@ class Passenger : public Train, public Account
                 if( train_no==obj.tno )
                 {
                     long pos = file.tellg();
-                    
+                    file.seekg(-1*sizeof(obj), ios::cur );
+                    file.close();
+                    obj.get_details();
+                    ofstream file1( "train.dat", ios::binary | ios::app );
+                    file1.seekp( pos, ios::beg )
+                    f1.write((char*)&obj, sizeof(obj));
+                    file.close()
                 }
             }
         }
+        void delete_train()
+        {
+            long int train_no;
+            cout<<"Enter Train Number of The TRain To Be deleted : ";
+            cin>>train_no;
+            ifstream f1( "train.dat", ios::binary )
+            ofstream f2( "temp.dat", ios::binary )
+            Train obj;
+            int flag = 0;
+            while( f1.eof() )
+            {
+                f1.read((char*)&obj, sizeof(obj))
+                if(  obj.tno != train_no )
+                {
+                    f2.write((char*)&obj, sizeof(obj));
+                    flag = 1;
+                }
+            }
+            if(flag == 0)
+                cout<<"No such train found ";
+            f1.close();
+            f2.close();
+            remove("train.dat");
+            rename("temp.dat", "train.dat")
+        }
+        
+        
+        
+        
+        void update_ticket()
+        {
+            long int ticket_no;
+            cout<<"Enter Ticket Number of The Booking to be updated : ";
+            cin>>ticket_no;
+            Passenger obj;
+            ifstream file("pass.dat", ios::binary )
+            while( !file.eof )
+            {
+                file.read( (char*)&obj, sizeof(obj) );
+                if( ticket_no==obj.tno )
+                {
+                    long pos = file.tellg();
+                    file.seekg(-1*sizeof(obj), ios::cur );
+                    file.close();
+                    obj.getdata();
+                    ofstream file1( "pass.dat", ios::binary | ios::app );
+                    file1.seekp( pos, ios::beg )
+                    f1.write((char*)&obj, sizeof(obj));
+                    file.close()
+                }
+            }
+        }
+        
+        
 };
 
 int main()
