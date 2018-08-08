@@ -23,12 +23,9 @@ struct time
 
 class Account
 {
-    private :
-        char password[30];
     protected :
-        char username[20], email[40];
-    public :
-        
+        char password[15];
+        char email[40];
 }
 
 class Train
@@ -53,7 +50,8 @@ class Passenger : public Train, public Account
 {
     private :
         char pname[20], email[30], gender[7], depcity[20], arrcity[20]; 
-        int age, tickno = ( rand()%8999 + 1000 );
+        int age; 
+        long int tickno = ( rand()%8999 + 1000 );
         long int mobno, trno;
     public :
          void getdata()                                               //#######################
@@ -67,6 +65,32 @@ class Passenger : public Train, public Account
             puts(pname);
             cout<<""
             
+         }
+        void check()
+        {
+             ifstream file("acc.dat", ios::binary)
+             cout<<"Enter email id : ";
+             gets(email);
+             char password[15];
+             Account obj;
+             while(!file.eof())
+             {
+                 file.write((char*)&obj, sizeof(obj));
+                 if(obj.email == email)
+                     break;
+             }
+             cout<<"Enter Password : ";
+             gets(password);
+             if(strcmp(obj.password,password)==0)
+             {
+                cout<<"Welcome";
+             }
+             else
+              {
+                 cout<<"Wrong Password !!!";
+                 Sleep(3000);
+                 exit(0);
+             }
          }
          void search_ticket(int ticket_no)
          {
@@ -223,8 +247,53 @@ class Passenger : public Train, public Account
                 }
             }
         }
-        
-        
+        void delete_ticket()
+        {
+            long int tick_no;
+            cout<<"Enter Train Number of The TRain To Be deleted : ";
+            cin>>tick_no;
+            ifstream f1( "pass.dat", ios::binary )
+            ofstream f2( "temp.dat", ios::binary )
+            Passenger obj;
+            int flag = 0;
+            while( f1.eof() )
+            {
+                f1.read((char*)&obj, sizeof(obj))
+                if(  obj.tickno != tick_no )
+                {
+                    f2.write((char*)&obj, sizeof(obj));
+                    flag = 1;
+                }
+            }
+            if(flag == 0)
+                cout<<"No such Booking found ";
+            f1.close();
+            f2.close();
+            remove("pass.dat");
+            rename("temp.dat", "pass.dat")
+        }
+        void display_bookings()
+        {
+            ifstream f2("train.dat", ios::binary)
+            ifstream f1("pass.dat", ios::binary)
+            Passenger obj;
+            while(!f1.eof)
+            {
+                f1.read((char*)&obj, sizeof(obj));
+                if(strcmp(obj.email,email)==0)
+                {
+                    Train ob;
+                    while(!f2.eof())
+                    {
+                        f2.read((char*)&obj, sizeof(obj))
+                        if( obj.trno = ob.tno )
+                            ob.print_details();
+                    }
+                }
+            }
+            f1.close();
+            f2.close();
+        }
 };
 
 int main()
