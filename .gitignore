@@ -294,6 +294,26 @@ class Passenger : public Train, public Account
             f1.close();
             f2.close();
         }
+        void pass_train()
+        {
+            Passenger obj;
+            ifstream file("pass.dat", ios::binary)
+            long int train_no;
+            cout<<"Enter Train Number : ";
+            cin>>train_no;
+            int flag = 0;
+            while(!file.eof())
+            {
+                file.read((char*)&obj, sizeof(obj))
+                if(obj.trno == train_no)
+                {
+                    obj.putdata();
+                    flag = 1;
+                }
+            }
+            file.close();
+        }
+        
 };
 
 int main()
