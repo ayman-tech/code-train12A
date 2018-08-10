@@ -39,6 +39,7 @@ class Train
     public :
         void get_details()             //########################
         {
+        cout<<"enter 
              
         }
         void print_details()           //########################
@@ -60,10 +61,20 @@ class Passenger : public Train, public Account
          }
          void putdata()                                                //##################
          {
-            cout<<"Ticket no"
+            cout<<"Ticket no"<<tickno;
             cout<<"Passenger Name : ";
             puts(pname);
-            cout<<""
+            cout<<"Email:";
+            puts(email);
+            cout<<"Gender:";
+            puts(gender);
+            cout<<"City of depature";
+            puts(depcity);
+            cout<<"City of arival";
+            puts(arrcity);
+            cout
+            
+            
             
          }
         void check()
