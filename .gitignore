@@ -546,7 +546,7 @@ void create_account()
       }
    }
    start();
-   cout<<"\n Retype the password to confirm change ";
+   cout<<"\n Retype the password to confirm change : ";
    gets(check);
    if(strcmp(check, a.get_pass())==0)
    {
