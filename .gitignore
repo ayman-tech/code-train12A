@@ -854,7 +854,7 @@ void quit()
    Sleep(300);
    cout<<"E";
    Sleep(500);
-   cout<<"\n\n BlueSky Railways\n Press Enter to exit";
+   cout<<"\n\n Thank You. Visit us again\n\n BlueSky Railways\n Press Enter to exit";
    getch();
    exit(0);
 }
