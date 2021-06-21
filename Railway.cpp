@@ -1,0 +1,860 @@
+#include<iostream>
+#include<conio.h>
+#include<stdio.h>
+#include<windows.h>
+#include<stdlib.h>
+#include<fstream>
+#include<string.h>
+#include<time.h>
+
+void start();
+void quit();
+void create_account();
+void add_train();
+void book_ticket(char str[] );
+void delete_ticket();
+void delete_train();
+void display_bookings(char email[]);
+void display_train();
+void display_tickets();
+void pass_train();
+void search_ticket();
+void train_by_city();
+void train_by_no();
+void update_ticket();
+void update_train();
+
+int flag;
+char ch;
+
+struct date
+{
+    short int day;
+    short int month;
+    int year;
+};
+
+struct Time
+{
+    short int hour;
+    short int minute;
+};
+
+class Account
+{
+    private :
+        char password[20];
+    protected :
+    	  char email[40];
+    public :
+        void getdata()
+        {
+             cout<<"\n Enter Your Email Id : ";
+      		 gets(email);
+      		 cout<<"\n Enter A Password : ";
+      		 gets(password);
+        }
+        char* get_email()
+        {
+            return email;
+        }
+        char* get_pass()
+        {
+            return password;
+        }
+}a;
+
+class Train
+{
+        private :
+            char tname[20], depcity[20], arrcity[20];
+            date depdate, arrdate;
+            Time deptime, arrtime, tottime;
+            float dist, price;
+        protected :
+        		long int trno;
+        public :
+            long get_trno()
+            {
+                return trno;
+            }
+            char* get_arrcity()
+            {
+                return arrcity;
+            }
+            char* get_depcity()
+            {
+                return depcity;
+            }
+            Train()
+            {
+                trno = 0;
+                strcpy(tname, "Null");
+                strcpy(depcity, "Null");
+                strcpy(arrcity, "Null");
+                dist = 0;
+                price = 0;
+            }
+            void get_details()
+            {
+                cout<<"\n Enter Train number : ";
+                cin>>trno;
+                cout<<" Enter Train name : ";
+                gets(tname);
+                cout<<" Enter Departure City : ";
+                gets(depcity);
+                cout<<" Enter Arrival City : ";
+                gets(arrcity);
+                cout<<" Enter Total Distance : ";
+                cin>>dist;
+                cout<<" Enter Departure Date - \n";
+                cout<<"     Enter Day : ";
+                cin>>depdate.day;
+                cout<<"     Enter Month : ";
+                cin>>depdate.month;
+                cout<<"     Enter Year : ";
+                cin>>depdate.year;
+                cout<<" Enter Arrival Date - \n";
+                cout<<"     Enter Day : ";
+                cin>>arrdate.day;
+                cout<<"     Enter Month : ";
+                cin>>arrdate.month;
+                cout<<"     Enter Year : ";
+                cin>>arrdate.year;
+                cout<<" Enter Departure Time - \n";
+                cout<<"     Enter Hour : ";
+                cin>>deptime.hour;
+                cout<<"     Enter Minute : ";
+                cin>>deptime.minute;
+                cout<<" Enter Arrival Time - \n";
+                cout<<"     Enter Hour : ";
+                cin>>arrtime.hour;
+                cout<<"     Enter Minute : ";
+                cin>>arrtime.minute;
+                cout<<" Enter Total time of journey  - \n";
+                cout<<"     Enter Hour : ";
+                cin>>tottime.hour;
+                cout<<"     Enter Minute : ";
+                cin>>tottime.minute;
+                cout<<" Enter price of each ticket : ";
+                cin>>price;
+            }
+            void print_details()
+            {
+                cout<<"\n\n Train number : ";
+                cout<<trno;
+                cout<<"\n Train name : ";
+                puts(tname);
+                cout<<" Departure City : ";
+                puts(depcity);
+                cout<<" Arrival City : ";
+                puts(arrcity);
+                cout<<" Total Distance ( in km ) : "<<dist;
+                cout<<"\n Departure Date - "<<depdate.day<<"-"<<depdate.month<<"-"<<depdate.year;
+                cout<<"\n Arrival Date - "<<arrdate.day<<"-"<<arrdate.month<<"-"<<arrdate.year;
+                cout<<"\n Departure Time - "<<deptime.hour<<":"<<deptime.minute;
+                cout<<"\n Arrival Time - "<<arrtime.hour<<":"<<arrtime.minute;
+                cout<<"\n Total time of journey  - "<<tottime.hour<<" hours & "<<tottime.minute<<" minutes";
+                cout<<"\n Price of ticket : "<<price;
+            }
+            ~Train()
+            {
+
+            }
+}t;
+class Passenger : public Train, private Account
+{
+    private :
+        char pname[20];
+        int age;
+        long int tickno;
+        long int mobno;
+    public :
+         Passenger()
+         {
+                strcpy(email, "Null");
+                strcpy(pname, "Null");
+                age=0;
+                tickno = ( rand()%8999 + 1000 );    // All 4-digit numbers
+                mobno = 0;
+         }
+         long int get_tickno()
+         {
+             return tickno;
+         }
+         void set_mail(char str[])
+         {
+             strcpy(email, str);
+         }
+         char* get_mail()
+         {
+             return email;
+         }
+         void getdata()
+         {
+            cout<<"\n Enter Passenger Name : ";
+            gets(pname);
+            cout<<" Enter Train Number : ";
+            cin>>trno;
+            cout<<" Age : ";
+            cin>>age;
+            cout<<" Enter Mobile Number : ";
+            cin>>mobno;
+            ifstream f1("Train.dat", ios::binary);
+            flag = 0;
+            while(f1.read((char *)&t,sizeof(t)))
+            {
+                if(t.get_trno()==trno)
+                {
+                    flag = 1;
+                    break;
+                }
+            }
+            if(flag==0)
+                cout<<" Train Not Available ";
+            f1.close();
+         }
+         void putdata()
+         {
+            cout<<"\n Ticket no : "<<tickno;
+            cout<<"\n Passenger Name : ";
+            puts(pname);
+            cout<<"\n Email : ";
+            puts(email);
+            cout<<"\n Age : "<<age;
+            cout<<"\n Mobile number : "<<mobno;
+            cout<<"\n Train Number : "<<trno;
+            cout<<"\n\n Do you want to view all details (Y/N) : ";
+            cin>>ch;
+            if(ch=='y'||ch=='Y')
+            {
+                ifstream file("Train.dat", ios::binary);
+                flag = 0;
+                while(file.read((char *)&t, sizeof(t)))
+                {
+                    if(trno ==t.get_trno())
+                    {
+                        t.print_details();
+                        break;
+                    }
+                }
+            }
+         }
+        ~Passenger()
+        {
+
+        }
+}p;
+void start()
+{
+    clrscr();
+    cout<<"---------------------------------------------------------------------------------------------------------------------------------------"<<endl;
+    cout<<"                                                          BlueSky Railways                                                                                       "<<endl;
+    cout<<"---------------------------------------------------------------------------------------------------------------------------------------"<<endl<<endl;
+}
+
+int main()
+{
+    //system("color 74");
+    srand(time(0));
+    int flag, choice, choice1;
+    char email[40],password[20];
+    Account a;
+    Label :
+    start();
+    cout<<"\n Welcome to BlueSky Railways.\n\n Please enter any of the choices (1 or 2) given below -:";
+    cout<<"\n 1. Register ";
+    cout<<"\n 2. Login ";
+    cout<<"\n 3. Exit ";
+    cout<<"\n Enter Choice : ";
+    flag = 0;
+    while(flag ==0)
+    {
+        try
+        {
+            cin>>choice;
+            if(choice==1 || choice==2 ||choice==3)
+                {
+                    flag = 1;
+                }
+            else
+                {
+                    cout<<"\n Enter choice between 1 - 3 ";
+                    flag = 0;
+                }
+        }
+        catch(...)
+        {
+            cout<<"\n Error : enter choice between 1 - 3 ";
+            flag=0;
+        }
+    }
+    start();
+    if(choice == 1)
+    {
+        create_account();
+    }
+    if(choice==3)
+    {
+        cout<<"\n Thank You For Using Our Services...";
+        quit();
+    }
+    cout<<"\n Enter Email Id : ";
+    gets(email);
+    cout<<"\n Enter Password : ";
+    gets(password);
+    if(strcmp(email, "admin")==0)
+        if(strcmp(password, "123")==0)
+        {
+            do
+            {
+                start();
+                cout<<"\n Please enter any of the choices (1 or 2) given below -: ";
+                cout<<"\n 1. Train Details ";
+                cout<<"\n 2. Passenger Details ";
+                cout<<"\n 3. Log Out \n";
+                flag = 0;
+                cout<<"\n Enter Choice : ";
+                while(flag ==0)
+                {
+                    try
+                    {
+                        cin>>choice;
+                        if(choice==1 || choice==2 || choice==3 )
+                            flag = 1;
+                        else
+                            cout<<"\n Enter choice between 1 - 3 ";
+                    }
+                    catch(...)
+                    {
+                        cout<<"\n Error : enter choice between 1 - 3 ";
+                        flag=0;
+                    }
+                }
+                if(choice==3)
+                    goto Label;
+                start();
+                if(choice==1)
+                {
+                    cout<<"\n Please enter any of the choices ( 1-6 ) given below -: ";
+                    cout<<"\n 1. Add Train Details ";
+                    cout<<"\n 2. Update Train Details ";
+                    cout<<"\n 3. Delete Train Details ";
+                    cout<<"\n 4. Search For Train ";
+                    cout<<"\n 5. Display Details Of All Trains ";
+                    cout<<"\n 6. Display All Trains Between Cities \n";
+                    cout<<"\n Enter Choice : ";
+                    flag = 0;
+                    while(flag ==0)
+                    {
+                        try
+                        {
+                            cin>>choice1;
+                            if(choice1>=1 && choice1<=6 )
+                                flag = 1;
+                            else
+                                cout<<"\n Enter choice between 1 - 6 ";
+                        }
+                        catch(...)
+                        {
+                            cout<<"\n Error : enter choice between 1 - 6 ";
+                        }
+                    }
+                    switch (choice1)
+                    {
+                        case 1 :
+                            add_train();
+                            break;
+                        case 2 :
+                            update_train();
+                            break;
+                        case 3 :
+                            delete_train();
+                            break;
+                        case 4 :
+                            train_by_no();
+                            break;
+                        case 5 :
+                            display_train();
+                            break;
+                        case 6 :
+                            train_by_city();
+                            break;
+                    }
+                }
+                else if(choice==2)
+                {
+                    cout<<"\n Please enter any of the choices ( 1-6 ) given below -: ";
+                    cout<<"\n 1. Book Ticket ";
+                    cout<<"\n 2. Search For Ticket ";
+                    cout<<"\n 3. Update Ticket Details ";
+                    cout<<"\n 4. Delete Ticket Details ";
+                    cout<<"\n 5. Display Info Of All Passengers Travelling In A Train ";
+                    cout<<"\n 6. Display All Ticket Bookings \n";
+                    flag = 0;
+                    cout<<"\n Enter Choice : ";
+                    while(flag == 0)
+                    {
+                        try
+                        {
+                            cin>>choice1;
+                            if(choice1>=1 && choice1<=6 )
+                                flag = 1;
+                            else
+                            {
+                                cout<<"\n Enter choice between 1 - 6 ";
+                            }
+                        }
+                        catch(...)
+                        {
+                            cout<<"\n Error : enter choice between 1 - 6 ";
+                        }
+                    }
+                    switch (choice1)
+                    {
+                        case 1 :
+                            book_ticket(email);
+                            break;
+                        case 2 :
+                            search_ticket();
+                            break;
+                        case 3 :
+                            update_ticket();
+                            break;
+                        case 4 :
+                            delete_ticket();
+                            break;
+                        case 5 :
+                            pass_train();
+                            break;
+                        case 6 :
+                            display_tickets();
+                            break;
+                    }
+                }
+                cout<<"\n\n Do you want to Go To The Main Menu (Y/N) : ";
+                cin>>ch;
+            }while((ch=='Y')||(ch=='y'));
+        }
+        else
+        {
+            cout<<"\n Wrong Password !!! ";
+            exit(0);
+        }
+    else
+    {
+        ifstream file("Acc.dat", ios::binary );
+        flag = 0;
+        while(!file.eof())
+        {
+            file.read((char*)&a, sizeof(a));
+            if(strcmp(a.get_email(), email)==0)
+            {
+                flag = 1;
+                break;
+            }
+        }
+        if (flag == 0)
+        {
+            cout<<"\n Wrong Email ";
+            goto Label;
+        }
+        if(strcmp(a.get_pass(),password)==0)
+        {
+            cout<<"\n Welcome";
+        }
+        else
+        {
+            cout<<"\n Wrong Password !!!";
+            Sleep(3000);
+            exit(0) ;
+        }
+        file.close();
+        do
+        {
+            start();
+            cout<<"\n Please enter any of the choices ( 1-6 ) given below -: ";
+            cout<<"\n 1. Book Tickets ";
+            cout<<"\n 2. Search For Train ";
+            cout<<"\n 3. View My Current Bookings ";
+            cout<<"\n 4. Display Trains Between Cities ";
+            cout<<"\n 5. Update Ticket Details ";
+            cout<<"\n 6. Delete Ticket Booking ";
+            cout<<"\n 7. Logout \n";
+            flag = 0;
+            cout<<"\n Enter Choice : ";
+            while(flag ==0)
+            {
+                try
+                {
+                    cin>>choice1;
+                    if(choice1>=1 && choice1<=6 )
+                        flag = 1;
+                    else
+                        cout<<"\n Enter choice between 1 - 6 ";
+                }
+                catch(...)
+                   {
+                       cout<<"\n Error : enter choice between 1 - 6 ";
+                   }
+            }
+            switch (choice1)
+            {
+                case 1 :
+                    book_ticket(email);
+                    break;
+                case 2 :
+                    train_by_no();
+                    break;
+                case 3 :
+                    display_bookings(email);
+                    break;
+                case 4 :
+                    train_by_city();
+                    break;
+                case 5 :
+                    update_ticket();
+                    break;
+                case 6 :
+                    delete_ticket();
+                    break;
+                case 7 :
+                    goto Label;
+            }
+            cout<<"\n\n Do you want to Go To The Main Menu (Y/N) : ";
+            cin>>ch;
+        }while((ch=='Y')||(ch=='y'));
+    }
+    quit();
+    return 0;
+}
+void create_account()
+{
+   char check[40];
+   start();
+   a.getdata();
+   Account s;
+   ifstream file("Acc.dat", ios::binary|ios::in);
+   while(file.read((char *)&s, sizeof(s)))
+   {
+   	if(strcmp(s.get_email(),a.get_email())==0)
+      {
+      	cout<<"Account already exists ";
+         Sleep(2000);
+         create_account();
+         return;
+      }
+   }
+   start();
+   cout<<"\n Retype the password to confirm change : ";
+   gets(check);
+   if(strcmp(check, a.get_pass())==0)
+   {
+   	ofstream file("Acc.dat", ios::binary | ios::app);
+      file.write((char*)&a, sizeof(a));
+      cout<<"\n\n Registration Successful";
+      file.close();
+      Sleep(2000);
+      start();
+      return;
+   }
+   else
+   {
+      cout<<"\n Incorrect Match. "<<endl<<" Please Try Again";
+      Sleep(3000);
+      int main();
+   }
+}
+void book_ticket( char str[40] )
+{
+    p.getdata();
+    start();
+    p.set_mail(str);
+    char ch;
+    cout<<" Your Ticket info is : /n /n";
+    p.putdata();
+    cout<<"\n\n Do you want to confirm this ticket booking (Y/N) : ";
+    cin>>ch;
+    if((ch=='y')||(ch=='Y'))
+    {
+        ofstream f2("Pass.dat", ios::binary | ios::app);
+        f2.write((char*)&p, sizeof(p));
+        f2.close();
+        cout<<"\n Your Ticket Has Been Booked ";
+    }
+    else
+        cout<<"\n Ticket Booking Cancelled ";
+}
+void display_tickets()
+{
+    ifstream file("Pass.dat", ios::binary);
+    flag = 0;
+    while( file.read((char*)&p, sizeof(p)) )
+    {
+        flag ++;
+        p.putdata();
+    }
+    if(flag == 0)
+        cout<<"\n No Booking Found ";
+}
+void search_ticket()
+{
+    int flag = 0;
+    long int ticket_no;
+    cout<<"\n Enter Ticket Number : ";
+    cin>>ticket_no;
+    ifstream file("Pass.dat", ios::binary);
+    while( file.read((char *) &p, sizeof(p)) )
+    {
+        if( ticket_no==p.get_tickno() )
+        {
+            p.putdata();
+            flag = 1;
+            break;
+        }
+    }
+    if(flag == 0)
+        cout<<"\n No such passenger found";
+    file.close();
+}
+void train_by_no()
+{
+    long int train_no ;
+    int flag = 0;
+    cout<<" Enter Train Number To Be Searched For : ";
+    cin>>train_no;
+    ifstream file( "Train.dat", ios::in | ios::binary);
+    while( file.read((char*)&t,sizeof(t)) )
+    {
+        if( train_no == t.get_trno() )
+        {
+            flag = 1;
+            break;
+        }
+    }
+    if( flag==1 )
+    {
+        cout<<"\n Search Successful \n\n";
+        t.print_details();
+    }
+    else
+        cout<<"\n No Such Train Found ";
+    file.close();
+}
+void train_by_city()
+{
+    char dep[15],arr[15];
+    cout<<" Enter Departure City : ";
+    gets(dep);
+    cout<<" Enter Arrival City: ";
+    gets(arr);
+    int flag = 0;
+    ifstream file( "Train.dat", ios::binary);
+    while( file.read((char*)&t,sizeof(t)) )
+    {
+        if((strcmp(arr, t.get_arrcity())==0)&&(strcmp(dep, t.get_depcity())==0))
+        {
+            if(flag == 0)
+                cout<<"\n Search Successful \n\n";
+            flag = 1;
+            t.print_details();
+        }
+    }
+    if( flag==0)
+        cout<<"\n No Such Train Found ";
+    file.close();
+}
+void display_train()
+{
+    ifstream file( "Train.dat",ios::binary );
+    flag = 0;
+    while(file.read((char*)&t, sizeof(t)))
+    {
+        t.print_details();
+        flag++;
+    }
+    if(flag==0)
+        cout<<"\n There are no trains available currently .";
+    file.close();
+}
+
+void add_train()
+{
+    cout<<"\n Enter The following info to add train schedule ";
+    t.get_details();
+    cout<<"\n\n Do you Want To Confirm This Train Schedule (Y/N) : ";
+    cin>>ch;
+    if(ch=='y'||ch=='Y')
+    {
+        ofstream file( "Train.dat", ios::binary | ios::app );
+        file.write((char*)&t, sizeof(t));
+        file.close();
+    }
+    else
+        cout<<"\n\n Train Schedule Cancelled ";
+}
+void update_train()
+{
+    long int train_no;
+    cout<<"\n Enter Train Number of The Train to be updated : ";
+    cin>>train_no;
+    ifstream f1("Train.dat", ios::binary );
+    flag = 0;
+    while(f1.read( (char*)&t, sizeof(t)))
+    {
+        if( train_no == t.get_trno() )
+        {
+            f1.seekg(-1*sizeof(t), ios::cur );
+            long pos = f1.tellg();
+            f1.close();
+            flag = 1;
+            t.get_details();
+            cout<<"\n\n Do You Want To Confirm This Train Schedule Change : ";
+            cin>>ch;
+            if(ch=='y'||ch=='Y')
+            {
+                ofstream f2("Train.dat", ios::ate | ios::binary);
+                f2.seekp( pos, ios::beg );
+                f2.write((char*)&t, sizeof(t));
+                f2.close();
+            }
+            break;
+        }
+    }
+    if(flag == 0)
+    {   cout<<"\n This Train Is Not Available ";    }
+}
+void delete_train()
+{
+    long int train_no;
+    cout<<"\n Enter Train Number of The Train To Be deleted : ";
+    cin>>train_no;
+    cout<<"\n Are You Sure You Want To Delete This Train Schedule : ";
+    cin>>ch;
+    if(ch=='y'||ch=='Y')
+    {
+        ifstream f1( "Train.dat", ios::binary );
+        ofstream f2( "temp.dat", ios::binary | ios::out );
+        int flag = 0;
+        while(f1.read((char*)&t, sizeof(t)))
+        {
+            if(t.get_trno()!=train_no)
+            {
+                f2.write((char*)&t, sizeof(t));
+            }
+            else
+                flag = 1;
+        }
+        if(flag == 0)
+            cout<<"\n No such train found ";
+        f1.close();
+        f2.close();
+        remove("Train.dat");
+        rename("temp.dat", "Train.dat");
+    }
+}
+void update_ticket()
+{
+    long int ticket_no;
+    cout<<"\n Enter Ticket Number of The Booking to be updated : ";
+    cin>>ticket_no;
+    ifstream f1("Pass.dat", ios::binary );
+    flag = 0;
+    while(f1.read((char*)&p, sizeof(p)))
+    {
+        if(ticket_no==p.get_tickno())
+        {
+            f1.seekg(-1*sizeof(p), ios::cur );
+            long pos = f1.tellg();
+            f1.close();
+            flag = 1;
+            p.getdata();
+            cout<<"\n\n Do You Want To Confirm This Booking Change : ";
+            cin>>ch;
+            if(ch=='y'||ch=='Y')
+            {
+                ofstream f2("Pass.dat", ios::ate | ios::binary);
+                f2.seekp( pos, ios::beg );
+                f2.write((char*)&p, sizeof(p));
+                f2.close();
+            }
+            break;
+        }
+    }
+    if(flag==0)
+    {   cout<<"\n No Such Booking Exists ";  }
+}
+void delete_ticket()
+{
+    long int tick_no;
+    cout<<"\n Enter Ticket Number of The Booking To Be Deleted : ";
+    cin>>tick_no;
+    ifstream f1( "Pass.dat", ios::binary );
+    ofstream f2( "temp.dat", ios::binary | ios::app );
+    int flag = 0;
+    while(f1.read((char*)&p, sizeof(p)))
+    {
+        if(p.get_tickno()!=tick_no)
+        {   f2.write((char*)&p, sizeof(p)); }
+        else
+        {   flag = 1;   }
+    }
+    if(flag == 0)
+        cout<<"\n No such Booking Exists ";
+    f1.close();
+    f2.close();
+    remove("Pass.dat");
+    rename("temp.dat", "Pass.dat");
+}
+void display_bookings(char mail[])
+{
+    ifstream f1("Pass.dat", ios::binary);
+    flag = 0;
+    while( f1.read((char*)&p, sizeof(p)) )
+    {
+        if(strcmp(p.get_mail(), mail)==0)
+            p.putdata();
+    }
+    f1.close();
+}
+void pass_train()
+{
+    ifstream file("Pass.dat", ios::binary);
+    long int train_no;
+    cout<<"\n Enter Train Number : ";
+    cin>>train_no;
+    int flag = 0;
+    while( file.read((char*)&p, sizeof(p)) )
+    {
+        if(p.get_trno() == train_no)
+        {
+            p.putdata();
+            flag++ ;
+        }
+    }
+    if(flag == 0)
+    {
+        cout<<"\n This train has no bookings";
+    }
+    file.close();
+}
+void quit()
+{
+	cout<<"\n\n G";
+   Sleep(300);
+   cout<<"O";
+   Sleep(300);
+   cout<<"O";
+   Sleep(300);
+   cout<<"D";
+   Sleep(300);
+   cout<<"B";
+   Sleep(300);
+   cout<<"Y";
+   Sleep(300);
+   cout<<"E";
+   Sleep(500);
+   cout<<"\n\n Thank You. Visit us again\n\n BlueSky Railways\n Press Enter to exit";
+   getch();
+   exit(0);
+}
